@@ -27,7 +27,7 @@ const ListRating: React.FC<ListRatingProps> = ({ product }) => {
                 <div className="mt-2">
                   <Rating value={review.rating} readOnly />
                   <div>{review.comment}</div>
-                  <hr className="mt-4 mb-4" />
+                  <hr className="mt-4 mb-4 max-w-[300px]" />
                 </div>
               </div>
             );
