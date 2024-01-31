@@ -13,14 +13,12 @@ export const products = [
       {
         color: "White",
         colorCode: "#FFFFFF",
-        image:
-          "https://m.media-amazon.com/images/I/71p-tHQ0u1L._AC_SX679_.jpg",
+        image: "https://m.media-amazon.com/images/I/71p-tHQ0u1L._AC_SX679_.jpg",
       },
       {
         color: "Gray",
         colorCode: "#808080",
-        image:
-          "https://m.media-amazon.com/images/I/417tEj3iJ8L._AC_.jpg",
+        image: "https://m.media-amazon.com/images/I/417tEj3iJ8L._AC_.jpg",
       },
     ],
     reviews: [],
@@ -78,14 +76,12 @@ export const products = [
       {
         color: "Black",
         colorCode: "#000000",
-        image:
-          "https://m.media-amazon.com/images/I/61g+McQpg7L._AC_SX679_.jpg",
+        image: "https://m.media-amazon.com/images/I/61g+McQpg7L._AC_SX679_.jpg",
       },
       {
         color: "Blue",
         colorCode: " #0000FF",
-        image:
-          "https://m.media-amazon.com/images/I/713Om9vCHUL._AC_SX679_.jpg",
+        image: "https://m.media-amazon.com/images/I/713Om9vCHUL._AC_SX679_.jpg",
       },
       {
         color: "Red",

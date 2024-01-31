@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
        ${small ? "px-2 py-1 border-[1px]" : "py-3 px-4 border-[2px]"}
        ${custom ? custom : ""}
        `}>
-      {Icon && <Icon size={24} />}
+      {Icon && <Icon size={20} />}
       {label}
     </button>
   );

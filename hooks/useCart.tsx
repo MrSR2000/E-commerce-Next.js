@@ -9,13 +9,17 @@ import {
 } from "react";
 import { toast } from "react-hot-toast";
 
+const cartItems = "eShopCartItem";
+
 type CartContextType = {
   cartTotalQty: number;
+  cartTotalAmount: number;
   cartProducts: CartProductType[] | null;
   handleAddProductToCart: (product: CartProductType) => void;
   handleRemoveProductFromCart: (product: CartProductType) => void;
   handleCartQtyIncrease: (product: CartProductType) => void;
   handleQtyDecrement: (product: CartProductType) => void;
+  handleClearCart: () => void;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -29,7 +33,9 @@ export const CartContextProvider = (props: Props) => {
   const [cartProducts, setcartProducts] = useState<CartProductType[] | null>(
     null
   );
+  const [cartTotalAmount, setCartTotalAmount] = useState(0);
 
+  //use effect
   useEffect(() => {
     const cartItems: any = localStorage.getItem("eShopCartItem");
     const cartProductsFromLocalStorage: CartProductType[] | null =
@@ -38,6 +44,34 @@ export const CartContextProvider = (props: Props) => {
     setcartProducts(cartProductsFromLocalStorage);
   }, []);
 
+  useEffect(() => {
+    const getTotals = () => {
+      if (cartProducts) {
+        const { total, qty } = cartProducts?.reduce(
+          (acc, item) => {
+            const itemTotal = item.quantity * item.price;
+
+            acc.total += itemTotal;
+            acc.qty += item.quantity;
+
+            return acc;
+          },
+          { total: 0, qty: 0 }
+        );
+
+        console.log("from here total qty ", qty);
+
+        setCartTotalQty(qty);
+        setCartTotalAmount(total);
+      }
+    };
+
+    getTotals();
+  }, [cartProducts]);
+
+  console.log(`total amount = ${cartTotalAmount} total qty = ${cartTotalQty}`);
+
+  //use callback
   const handleAddProductToCart = useCallback(
     (product: CartProductType) => {
       setcartProducts((prev) => {
@@ -49,7 +83,7 @@ export const CartContextProvider = (props: Props) => {
           updatedCart = [product];
         }
 
-        localStorage.setItem("eShopCartItem", JSON.stringify(updatedCart));
+        localStorage.setItem(cartItems, JSON.stringify(updatedCart));
         return updatedCart;
       });
 
@@ -66,7 +100,7 @@ export const CartContextProvider = (props: Props) => {
         });
 
         setcartProducts(filteredProduct);
-        localStorage.setItem("eShopCartItem", JSON.stringify(filteredProduct));
+        localStorage.setItem(cartItems, JSON.stringify(filteredProduct));
       }
       toast.success("Product Removed from Cart");
     },
@@ -95,10 +129,7 @@ export const CartContextProvider = (props: Props) => {
         }
 
         setcartProducts(updatedCartProduct);
-        localStorage.setItem(
-          "eShopCartItem",
-          JSON.stringify(updatedCartProduct)
-        );
+        localStorage.setItem(cartItems, JSON.stringify(updatedCartProduct));
       }
       toast.success("Incremented Quantity");
     },
@@ -126,23 +157,31 @@ export const CartContextProvider = (props: Props) => {
           }
 
           setcartProducts(updatedCartProduct);
-          localStorage.setItem(
-            "eShopCartItem",
-            JSON.stringify(updatedCartProduct)
-          );
+          localStorage.setItem(cartItems, JSON.stringify(updatedCartProduct));
         }
       }
     },
     [cartProducts]
   );
 
+  const handleClearCart = useCallback(() => {
+    setcartProducts(null);
+    setCartTotalQty(0);
+
+    localStorage.setItem(cartItems, JSON.stringify(null));
+
+    toast.success("Cleared Cart");
+  }, [cartProducts]);
+
   const value = {
     cartTotalQty,
+    cartTotalAmount,
     cartProducts,
     handleAddProductToCart,
     handleRemoveProductFromCart,
     handleCartQtyIncrease,
     handleQtyDecrement,
+    handleClearCart,
   };
 
   return <CartContext.Provider value={value} {...props} />;
