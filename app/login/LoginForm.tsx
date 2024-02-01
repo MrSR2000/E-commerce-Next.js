@@ -7,8 +7,18 @@ import Input from "../components/inputs/Input";
 import Button from "../components/Button";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { SafeUser } from "@/types";
+
+interface LoginFormProps {
+  currentUser: SafeUser | null;
+}
 
 const LoginForm = () => {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -26,6 +36,22 @@ const LoginForm = () => {
     setIsLoading(true);
 
     console.log("login values", data);
+
+    signIn("credentials", {
+      ...data,
+      redirect: false,
+    }).then((callback) => {
+      setIsLoading(false);
+
+      if (callback?.ok) {
+        router.push("/cart");
+        router.refresh();
+
+        toast.success("login successful");
+      } else if (callback?.error) {
+        toast.error(`error while logging in : ${callback.error}`);
+      }
+    });
   };
 
   return (
