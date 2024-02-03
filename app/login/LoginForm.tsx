@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Heading from "../components/Heading";
 import Input from "../components/inputs/Input";
@@ -16,7 +16,7 @@ interface LoginFormProps {
   currentUser: SafeUser | null;
 }
 
-const LoginForm = () => {
+const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +31,15 @@ const LoginForm = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    console.log("here use effect");
+    if (currentUser) {
+      console.log("eta chiryo ?");
+      router.push("/cart");
+      router.refresh();
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
@@ -54,6 +63,9 @@ const LoginForm = () => {
     });
   };
 
+  if (currentUser) {
+    return <p className="text-center">Logged in. Redirecting...</p>;
+  }
   return (
     <>
       <Heading title="Login" center />
@@ -66,7 +78,9 @@ const LoginForm = () => {
       />
       <Button
         label="Continue with Google"
-        onClick={() => {}}
+        onClick={() => {
+          signIn("google");
+        }}
         icon={FaGoogle}
         outline
       />

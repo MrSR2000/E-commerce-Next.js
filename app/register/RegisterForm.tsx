@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Heading from "../components/Heading";
 import Button from "../components/Button";
@@ -11,8 +11,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { SafeUser } from "@/types";
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+  currentUser: SafeUser | null;
+}
+
+const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +33,12 @@ const RegisterForm = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/cart");
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
@@ -59,6 +70,13 @@ const RegisterForm = () => {
         setIsLoading(false);
       });
   };
+
+  if (currentUser) {
+    return (
+      <p className="text-center">User Already Registered. Redirecting...</p>
+    );
+  }
+
   return (
     <>
       <Heading title="SignUp" center />
@@ -71,7 +89,9 @@ const RegisterForm = () => {
       />
       <Button
         label="Continue with Google"
-        onClick={() => {}}
+        onClick={() => {
+          signIn("google");
+        }}
         icon={FaGoogle}
         outline
       />

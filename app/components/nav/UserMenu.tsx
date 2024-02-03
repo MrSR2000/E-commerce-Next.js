@@ -1,7 +1,5 @@
 "use client";
 
-import { Avatar } from "@mui/material";
-import { blue, deepOrange } from "@mui/material/colors";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { AiFillCaretDown } from "react-icons/ai";
@@ -9,6 +7,7 @@ import MenuItem from "./MenuItem";
 import { signOut } from "next-auth/react";
 import BackDrop from "./BackDrop";
 import { SafeUser } from "@/types";
+import Avatar from "../Avatar";
 
 interface UserMenuProps {
   currentUser: SafeUser | null;
@@ -42,7 +41,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         transition
         text-slate-700
       ">
-          <Avatar sx={{ bgcolor: blue[700] }} />
+          <Avatar src={currentUser?.image} />
           <AiFillCaretDown />
         </div>
         {isOpen && (
@@ -70,13 +69,15 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   <MenuItem children="Admin Dashboard" onClick={toggleOpen} />
                 </Link>
                 <hr />
-                <MenuItem
-                  children="Logout"
-                  onClick={() => {
-                    toggleOpen();
-                    signOut();
-                  }}
-                />
+                <Link href="/">
+                  <MenuItem
+                    children="Logout"
+                    onClick={() => {
+                      toggleOpen();
+                      signOut();
+                    }}
+                  />
+                </Link>
               </div>
             ) : (
               <>
